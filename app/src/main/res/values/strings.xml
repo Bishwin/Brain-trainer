@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">"Brain Trainer"</string>
+    <string name="action_settings">Settings</string>
+    <string name="game_title">Brain Trainer</string>
+    <string name="continue_game">Continue</string>
+    <string name="new_game">New Game</string>
+    <string name="about_game">About</string>
+    <string name="exit_game">Exit</string>
+
+    <string name="about_title">Game Instructions</string>
+    <string name="about_info">About game goes here</string>
+
+    <string name="setting_label">Settings...</string>
+    <string name="setting_title">Settings</string>
+    <string name="setting_shortcut">s</string>
+    <string name="hint_title">Hints</string>
+    <string name="hint_summary">Grants 4 tries per questions</string>
+
+    <string name="difficulty_label">Difficulty</string>
+    <string name="novice_label">Novice</string>
+    <string name="easy_label">Easy</string>
+    <string name="medium_label">Medium</string>
+    <string name="guru_label">Guru</string>
+
+
+
+
+
+</resources>
