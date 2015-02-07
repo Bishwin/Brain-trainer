@@ -12,9 +12,7 @@
     <string name="about_title">Game Instructions</string>
     <string name="about_info">About game goes here</string>
 
-    <string name="setting_label">Settings...</string>
     <string name="setting_title">Settings</string>
-    <string name="setting_shortcut">s</string>
     <string name="hint_title">Hints</string>
     <string name="hint_summary">Grants 4 tries per questions</string>
 

@@ -15,15 +15,24 @@ import android.view.MenuItem;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.view.Window;
 
+public class MainMenu extends Activity implements OnClickListener {
 
-
-public class MainActivity extends ActionBarActivity implements OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ActionBar actionBar = getActionBar();
+
+        try{
+            actionBar.setTitle("hello");
+        }
+        catch(Exception e){
+            System.out.println("whoops");
+        }
 
         //Listeners
         View continueButton=findViewById(R.id.continue_button);
@@ -34,8 +43,6 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
         aboutButton.setOnClickListener(this);
         View exitButton = findViewById(R.id.exit_button);
         exitButton.setOnClickListener(this);
-        View settingButton = findViewById(R.id.settings_button);
-        settingButton.setOnClickListener(this);
     }
 
     public void onClick(View v){
@@ -47,9 +54,8 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
                 Intent i = new Intent(this, about.class);
                 startActivity(i);
                 break;
-            case R.id.settings_button:
-                Intent pref = new Intent(this, Prefs.class);
-                startActivity(pref);
+            case R.id.exit_button:
+                finish();
                 break;
         }
     }
@@ -72,7 +78,9 @@ public class MainActivity extends ActionBarActivity implements OnClickListener {
 
     private void startGame(int i){
         Log.d(TAG, "clicked on " + i);
-        //start game here...
+        Intent intent = new Intent(MainMenu.this, GameView.class);
+        intent.putExtra(GameView.KEY_DIFFICULTY, i);
+        startActivity(intent);
     }
 
 
