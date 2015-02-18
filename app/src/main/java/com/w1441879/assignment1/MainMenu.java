@@ -27,12 +27,12 @@ public class MainMenu extends Activity implements OnClickListener {
 
         ActionBar actionBar = getActionBar();
 
-        try{
+        /*try{
             actionBar.setTitle("hello");
         }
         catch(Exception e){
             System.out.println("whoops");
-        }
+        }*/
 
         //Listeners
         View continueButton=findViewById(R.id.continue_button);

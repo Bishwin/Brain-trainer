@@ -21,6 +21,9 @@ public class GameView extends Activity {
 
         int diff = getIntent().getIntExtra(KEY_DIFFICULTY, DIFFICULTY_EASY);
 
+        setContentView(R.layout.gameview);
+
+
 
 
 
