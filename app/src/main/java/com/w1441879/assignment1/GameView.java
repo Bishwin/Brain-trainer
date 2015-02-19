@@ -2,10 +2,13 @@ package com.w1441879.assignment1;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
+import android.widget.TextView;
 
 public class GameView extends Activity {
     private static final String TAG = "BrainTrainer" ;
+
 
     public static final String KEY_DIFFICULTY =
             "com.w1441879.assignment1.difficulty";
@@ -22,6 +25,19 @@ public class GameView extends Activity {
         int diff = getIntent().getIntExtra(KEY_DIFFICULTY, DIFFICULTY_EASY);
 
         setContentView(R.layout.gameview);
+
+        final TextView mTextField = (TextView) this.findViewById(R.id.timer);
+
+        new CountDownTimer(30000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                mTextField.setText("done!");
+            }
+        }.start();
 
 
 

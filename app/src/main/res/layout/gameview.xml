@@ -12,6 +12,14 @@
         android:stretchColumns="*"
         android:layout_alignParentBottom="true">
         <TableRow>
+            <TextView
+                android:id="@+id/timer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            />
+
+        </TableRow>
+        <TableRow>
             <Button
                 android:id="@+id/keypad1"
                 android:layout_width="wrap_content"
