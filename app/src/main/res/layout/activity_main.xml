@@ -1,17 +1,12 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layout_gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="40dip"
     tools:context=".MainActivity">
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
 
         <Button
             android:id="@+id/continue_button"
@@ -22,16 +17,20 @@
             android:id="@+id/new_game_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/new_game"/>
+            android:text="@string/new_game"
+            android:layout_below="@id/continue_button"/>
         <Button
             android:id="@+id/about_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/about_game"/>
+            android:text="@string/about_game"
+            android:layout_below="@id/new_game_button"/>
+
         <Button
             android:id="@+id/exit_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/exit_game"/>
-    </LinearLayout>
-</LinearLayout>
+            android:text="@string/exit_game"
+            android:layout_below="@id/about_button"/>
+
+</RelativeLayout>

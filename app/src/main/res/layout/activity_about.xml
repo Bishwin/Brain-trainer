@@ -4,7 +4,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.w1441879.assignment1.about">
+    tools:context="com.w1441879.assignment1.About">
 
     <TextView
         android:id="@+id/about_info"

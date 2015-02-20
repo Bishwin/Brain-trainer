@@ -3,22 +3,19 @@ package com.w1441879.assignment1;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.util.Log;
-import android.view.Window;
 
 public class MainMenu extends Activity implements OnClickListener {
 
+    View continueButton, newButton, aboutButton, exitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +31,16 @@ public class MainMenu extends Activity implements OnClickListener {
             System.out.println("whoops");
         }*/
 
+        //Buttons
+        continueButton=findViewById(R.id.continue_button);
+        newButton = findViewById(R.id.new_game_button);
+        aboutButton = findViewById(R.id.about_button);
+        exitButton = findViewById(R.id.exit_button);
+
         //Listeners
-        View continueButton=findViewById(R.id.continue_button);
         continueButton.setOnClickListener(this);
-        View newButton = findViewById(R.id.new_game_button);
         newButton.setOnClickListener(this);
-        View aboutButton = findViewById(R.id.about_button);
         aboutButton.setOnClickListener(this);
-        View exitButton = findViewById(R.id.exit_button);
         exitButton.setOnClickListener(this);
     }
 
@@ -51,7 +50,7 @@ public class MainMenu extends Activity implements OnClickListener {
                 openNewGameDialog();
                 break;
             case R.id.about_button:
-                Intent i = new Intent(this, about.class);
+                Intent i = new Intent(this, About.class);
                 startActivity(i);
                 break;
             case R.id.exit_button:
@@ -76,11 +75,11 @@ public class MainMenu extends Activity implements OnClickListener {
                 .show();
     }
 
-    private void startGame(int i){
-        Log.d(TAG, "clicked on " + i);
-        Intent intent = new Intent(MainMenu.this, GameView.class);
-        intent.putExtra(GameView.KEY_DIFFICULTY, i);
-        startActivity(intent);
+    private void startGame(int selectedDifficulty){
+        Log.d(TAG, "clicked on " + selectedDifficulty);
+        Intent gameIntent = new Intent(MainMenu.this, Game.class);
+        gameIntent.putExtra("Difficulty", selectedDifficulty);
+        startActivity(gameIntent);
     }
 
 
@@ -101,7 +100,7 @@ public class MainMenu extends Activity implements OnClickListener {
 
         switch(item.getItemId()){
             case R.id.settings:
-                startActivity(new Intent(this, Prefs.class));
+                startActivity(new Intent(this, Settings.class));
                 return true;
         }
         return false;

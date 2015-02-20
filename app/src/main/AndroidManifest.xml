@@ -17,14 +17,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".about"
+            android:name=".About"
             android:label="@string/about_title"
             android:theme="@android:style/Theme.Dialog">
         </activity>
-        <activity android:name=".Prefs"
+        <activity android:name=".Settings"
             android:label="@string/setting_title">
         </activity>
-        <activity android:name=".GameView"
+        <activity android:name=".Game"
             >
         </activity>
 

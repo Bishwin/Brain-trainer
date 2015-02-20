@@ -5,6 +5,35 @@
     android:layout_alignParentBottom="true"
     android:id="@+id/buttons">
 
+    <TextView
+        android:id="@+id/resultField"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="50sp"
+        android:text="CORRECT"
+        />
+    <TextView
+        android:id="@+id/questionField"
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:layout_below="@+id/resultField"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="70sp"
+        android:text="2+2=?"
+        android:background="@drawable/border"
+        />
+    <TextView
+        android:id="@+id/timerField"
+        android:layout_width="match_parent"
+        android:layout_height="40sp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="75px"
+        android:layout_below="@+id/questionField"/>
+
     <TableLayout
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -12,31 +41,23 @@
         android:stretchColumns="*"
         android:layout_alignParentBottom="true">
         <TableRow>
-            <TextView
-                android:id="@+id/timer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-            />
-
-        </TableRow>
-        <TableRow>
             <Button
                 android:id="@+id/keypad1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1"
+                android:text="@string/button_1"
                 />
             <Button
                 android:id="@+id/keypad2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2"
+                android:text="@string/button_2"
                 />
             <Button
                 android:id="@+id/keypad3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3"
+                android:text="@string/button_3"
                 />
         </TableRow>
         <TableRow>
@@ -44,19 +65,19 @@
                 android:id="@+id/keypad4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4"
+                android:text="@string/button_4"
                 />
             <Button
                 android:id="@+id/keypad5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="5"
+                android:text="@string/button_5"
                 />
             <Button
                 android:id="@+id/keypad6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="6"
+                android:text="@string/button_6"
                 />
         </TableRow>
         <TableRow>
@@ -64,46 +85,46 @@
                 android:id="@+id/keypad7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="7"
+                android:text="@string/button_7"
                 />
             <Button
                 android:id="@+id/keypad8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="8"
+                android:text="@string/button_8"
                 />
             <Button
                 android:id="@+id/keypad9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="9"
+                android:text="@string/button_9"
                 />
         </TableRow>
         <TableRow>
             <Button
-                android:id="@+id/del"
+                android:id="@+id/keypadDEL"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DEL"
+                android:text="@string/button_DEL"
                 />
             <Button
                 android:id="@+id/keypad0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text="@string/button_0"
                 />
             <Button
-                android:id="@+id/minus"
+                android:id="@+id/keypadMinus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-"
+                android:text="@string/button_minus"
                 />
         </TableRow>
             <Button
-                android:id="@+id/hash"
+                android:id="@+id/keypadHash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="#"
+                android:text="@string/button_hash"
                 />
     </TableLayout>
 
