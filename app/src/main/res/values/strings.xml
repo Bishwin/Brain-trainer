@@ -14,7 +14,7 @@
 
     <string name="setting_title">Settings</string>
     <string name="hint_title">Hints</string>
-    <string name="hint_summary">Grants four tries per question and hints if an incorrect answer is greater than or less than the correct answer </string>
+    <string name="hint_summary">Grants four attempts per question and hints if an incorrect answer is greater than or less than the correct answer </string>
 
     <string name="difficulty_label">Difficulty</string>
     <string name="novice_label">Novice</string>
@@ -35,6 +35,8 @@
     <string name="button_DEL">DEL</string>
     <string name="button_minus">-</string>
     <string name="button_hash">#</string>
+
+    <string name="StartMSG">Press # To Start</string>
 
 
 </resources>

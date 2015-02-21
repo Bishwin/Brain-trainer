@@ -11,16 +11,14 @@ import android.widget.TextView;
 public class Game extends Activity implements OnClickListener{
     private static final String TAG = "BrainTrainer" ;
 
-    public static final String KEY_DIFFICULTY =
-            "com.w1441879.assignment1.difficulty";
-
-    public static final int DIFFICULTY_NOVICE = 0;
-    public static final int DIFFICULTY_EASY = 1;
-    public static final int DIFFICULTY_MEDIUM = 2;
-    public static final int DIFFICULTY_GURU = 3;
+    private boolean gameStatus = false;
+    private String userAnswer="?";
+    int attempt = 0;
+    int qLength;
+    boolean hints = true;
+    int questions = 0;
 
     private TextView resultField, questionField, timerField;
-    private View btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn0, btnDEL, btnMinus, btnHash;
 
     private GameLogic gameQuestions;
 
@@ -33,20 +31,19 @@ public class Game extends Activity implements OnClickListener{
         questionField=(TextView)findViewById(R.id.questionField);
         timerField=(TextView)findViewById(R.id.timerField);
         //Buttons
-        btn1=findViewById(R.id.keypad1);
-        btn2=findViewById(R.id.keypad2);
-        btn3=findViewById(R.id.keypad3);
-        btn4=findViewById(R.id.keypad4);
-        btn5=findViewById(R.id.keypad5);
-        btn6=findViewById(R.id.keypad6);
-        btn7=findViewById(R.id.keypad7);
-        btn8=findViewById(R.id.keypad8);
-        btn9=findViewById(R.id.keypad9);
-        btn0=findViewById(R.id.keypad0);
-        btnDEL=findViewById(R.id.keypadDEL);
-        btnMinus=findViewById(R.id.keypadMinus);
-        btnHash=findViewById(R.id.keypadHash);
-
+        View btn1=findViewById(R.id.keypad1);
+        View btn2=findViewById(R.id.keypad2);
+        View btn3=findViewById(R.id.keypad3);
+        View btn4=findViewById(R.id.keypad4);
+        View btn5=findViewById(R.id.keypad5);
+        View btn6=findViewById(R.id.keypad6);
+        View btn7=findViewById(R.id.keypad7);
+        View btn8=findViewById(R.id.keypad8);
+        View btn9=findViewById(R.id.keypad9);
+        View btn0=findViewById(R.id.keypad0);
+        View btnDEL=findViewById(R.id.keypadDEL);
+        View btnMinus=findViewById(R.id.keypadMinus);
+        View btnHash=findViewById(R.id.keypadHash);
         //Listeners
         btn1.setOnClickListener(this);
         btn2.setOnClickListener(this);
@@ -69,7 +66,116 @@ public class Game extends Activity implements OnClickListener{
 
     public void onClick(View v){
         switch(v.getId()){
+            case R.id.keypad1:
+                input("1");
+                break;
+            case R.id.keypad2:
+                input("2");
+                break;
+            case R.id.keypad3:
+                input("3");
+                break;
+            case R.id.keypad4:
+                input("4");
+                break;
+            case R.id.keypad5:
+                input("5");
+                break;
+            case R.id.keypad6:
+                input("6");
+                break;
+            case R.id.keypad7:
+                input("7");
+                break;
+            case R.id.keypad8:
+                input("8");
+                break;
+            case R.id.keypad9:
+                input("9");
+                break;
+            case R.id.keypad0:
+                input("0");
+                break;
+            case R.id.keypadDEL:
+                delete();
+                break;
+            case R.id.keypadMinus:
+                input("-");
+                break;
+            case R.id.keypadHash:
+                if(!gameStatus)startGame();
+                else checkAnswer(userAnswer);
+                System.out.println(userAnswer);
 
+                break;
+        }
+    }
+
+    public void startGame(){
+        gameStatus = true;
+            GetQuestion();
+        timer();
+    }
+
+    public void GetQuestion(){
+
+            String Q = gameQuestions.createQuestion();
+            //System.out.println("Q: " + Q);
+            questionField.setText(Q + userAnswer);
+            qLength = Q.length();
+            questions++;
+            System.out.println("question number: "+ questions);
+
+    }
+
+    public void input( String key){
+        if(gameStatus) {
+            if(userAnswer.equals("?")){
+                userAnswer = "";
+                questionField.setText(questionField.getText().subSequence(0,questionField.length()-1));
+            }
+            questionField.append(key);
+            userAnswer = userAnswer.concat(key);
+        }
+    }
+
+    public void checkAnswer(String userAnswer){
+        int answer = gameQuestions.getAnswer();
+        try {
+            int userInput = Integer.parseInt(userAnswer);
+            if (userInput == answer) {
+                resultField.setTextColor(getResources().getColor(R.color.correct_answer));
+                resultField.setText("CORRECT");
+            } else {
+                if (hints && attempt < 3) {
+                    resultField.setTextColor(getResources().getColor(R.color.default_colour));
+                    if (userInput > answer) {
+                        resultField.setText("LESS");
+                        attempt++;
+                    } else if (userInput < answer) {
+                        resultField.setText("GREATER");
+                        attempt++;
+                    }
+                } else {
+                    resultField.setTextColor(getResources().getColor(R.color.incorrect_answer));
+                    resultField.setText("WRONG");
+
+                }
+            }
+
+        }catch (Exception e){
+            resultField.setText("Input Answer!");
+        }
+    }
+
+    public void delete(){
+        if(gameStatus) {
+            System.out.println(questionField.length());
+            System.out.println(qLength);
+            if (questionField.length() > qLength) {
+                questionField.setText(questionField.getText().subSequence(0,questionField.length()-1));
+                userAnswer = userAnswer.substring(0,userAnswer.length()-1);
+            }
         }
     }
 

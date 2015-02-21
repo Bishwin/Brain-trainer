@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color
-        name="main_accent">#FFFFFF</color>
+    <color name="main_accent">#FFFFFF</color>
+    <color name="correct_answer">#4DC920</color>
+    <color name="incorrect_answer">#D12A2A</color>
+    <color name="default_colour">#fa000000</color>
 
 
 </resources>

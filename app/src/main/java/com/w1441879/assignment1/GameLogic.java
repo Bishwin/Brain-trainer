@@ -1,5 +1,7 @@
 package com.w1441879.assignment1;
 
+import android.widget.TextView;
+
 import java.util.Random;
 
 public class GameLogic {
@@ -21,34 +23,37 @@ public class GameLogic {
                 break;
             case 1:
                 int num1 = rng.nextInt(3-2 +1)+2; //max 3 ints, min 2 ints
-                System.out.println(num1);
+                //System.out.println(num1);
                 numbers = new int[num1];
                 break;
             case 2:
                 int num2 = rng.nextInt(4-2 +1)+2; //max 4 ints, min 2 ints
-                System.out.println(num2);
+                //System.out.println(num2);
                 numbers = new int[num2];
                 break;
             case 3:
                 int num3 = rng.nextInt(6-4 +1)+4; //max 6 ints, min 4 ints
-                System.out.println(num3);
+                //System.out.println(num3);
                 numbers = new int[num3];
                 break;
         }
 
     }
 
-    public void createQuestion(){
-        System.out.println("getOperator");
+    public String createQuestion(){
+        String Q = "";
+        //System.out.println("getOperator");
         getOperator();
-        System.out.println("getNum");
+        //System.out.println("getNum");
         getNum();
         System.out.println(" ");
         for(int i = 0; i < numbers.length;i++){
             System.out.print(numbers[i] + " " + qOperators[i] + " ");
+            String x = Integer.toString(numbers[i]);
+            //System.out.println("x: "+ x);
+            Q = Q.concat(x).concat(qOperators[i]);
         }
-
-        Calculate();
+        return Q;
         /*int x =0;
         int answer = Calculate(numbers[x], qOperators[x],numbers[x+1]);
         x++;
@@ -67,7 +72,7 @@ public class GameLogic {
         for(int i = 0; i < qOperators.length-1;i++){
             qOperators[i]=operator[rng.nextInt(3-0 +1) +0];
             //qOperators[i]=operator[0];
-            System.out.println("index: "+ (i+1) + " " + qOperators[i]);
+            //System.out.println("index: "+ (i+1) + " " + qOperators[i]);
         }
 
         qOperators[qOperators.length-1] = "=";
@@ -77,20 +82,20 @@ public class GameLogic {
     private void getNum(){
         for(int i = 0; i < numbers.length;i++){
             numbers[i]=rng.nextInt(10 - 1 +1)+1; //max 10, min 1
-            System.out.println("index: "+ (i+1) + " " + numbers[i]);
+            //System.out.println("index: "+ (i+1) + " " + numbers[i]);
         }
 
     }
 
-    private void Calculate(){
-        int tempTotal = 0;
+    public int getAnswer(){
+        int questionAnswer = 0;
 
-        tempTotal = Answer(numbers[0], qOperators[0], numbers[1]);
+        questionAnswer = Answer(numbers[0], qOperators[0], numbers[1]);
 
         for(int i = 2; i < numbers.length; i++){
-            tempTotal = Answer(tempTotal, qOperators[i-1], numbers[i]);
+            questionAnswer = Answer(questionAnswer, qOperators[i-1], numbers[i]);
         }
-        System.out.println(tempTotal);
+        return questionAnswer;
     }
 
     private int Answer(int num1, String op, int num2){
@@ -114,6 +119,11 @@ public class GameLogic {
 
 
         return answer;
+    }
+
+    public void checkUserAnswer(String input){
+        int ans = Integer.parseInt(input);
+
     }
 
 }

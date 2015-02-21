@@ -11,27 +11,25 @@
         android:layout_height="80dp"
         android:gravity="center"
         android:textAlignment="center"
-        android:textSize="50sp"
-        android:text="CORRECT"
+        android:textSize="30sp"
         />
     <TextView
         android:id="@+id/questionField"
         android:layout_width="match_parent"
-        android:layout_height="125dp"
+        android:layout_height="130dp"
         android:layout_below="@+id/resultField"
         android:gravity="center"
         android:textAlignment="center"
-        android:textSize="70sp"
-        android:text="2+2=?"
+        android:textSize="30sp"
         android:background="@drawable/border"
-        />
+        android:text="@string/StartMSG"/>
     <TextView
         android:id="@+id/timerField"
         android:layout_width="match_parent"
-        android:layout_height="40sp"
+        android:layout_height="80dp"
         android:gravity="center"
         android:textAlignment="center"
-        android:textSize="75px"
+        android:textSize="30sp"
         android:layout_below="@+id/questionField"/>
 
     <TableLayout
