@@ -11,16 +11,18 @@ import android.widget.TextView;
 public class Game extends Activity implements OnClickListener{
     private static final String TAG = "BrainTrainer" ;
 
-    private boolean gameStatus = false;
-    private String userAnswer="?";
+    private boolean keypadEnabled = false;
+    private String userAnswer;
     int attempt = 0;
-    int qLength;
-    boolean hints = true;
+    private int qLength;
+    boolean hints = false;
     int questions = 0;
+    boolean questionAnswered = false;
 
     private TextView resultField, questionField, timerField;
 
     private GameLogic gameQuestions;
+    private CountDownTimer timer;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -62,59 +64,79 @@ public class Game extends Activity implements OnClickListener{
         int diff = getIntent().getIntExtra("Difficulty", 0);
 
         gameQuestions = new GameLogic(diff);
+
+        timer = new CountDownTimer(11000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                timerField.setText("Time remaining: " + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                displayResult(false);
+                startTurn();
+            }
+        };
     }
 
     public void onClick(View v){
         switch(v.getId()){
             case R.id.keypad1:
-                input("1");
+                userInput("1");
                 break;
             case R.id.keypad2:
-                input("2");
+                userInput("2");
                 break;
             case R.id.keypad3:
-                input("3");
+                userInput("3");
                 break;
             case R.id.keypad4:
-                input("4");
+                userInput("4");
                 break;
             case R.id.keypad5:
-                input("5");
+                userInput("5");
                 break;
             case R.id.keypad6:
-                input("6");
+                userInput("6");
                 break;
             case R.id.keypad7:
-                input("7");
+                userInput("7");
                 break;
             case R.id.keypad8:
-                input("8");
+                userInput("8");
                 break;
             case R.id.keypad9:
-                input("9");
+                userInput("9");
                 break;
             case R.id.keypad0:
-                input("0");
+                userInput("0");
                 break;
             case R.id.keypadDEL:
                 delete();
                 break;
             case R.id.keypadMinus:
-                input("-");
+                userInput("-");
                 break;
             case R.id.keypadHash:
-                if(!gameStatus)startGame();
-                else checkAnswer(userAnswer);
-                System.out.println(userAnswer);
-
+                if(!keypadEnabled)startTurn();
+                else if(questionAnswered){
+                    startTurn();
+                }else checkAnswer(userAnswer);
                 break;
         }
     }
 
-    public void startGame(){
-        gameStatus = true;
+    public void startTurn(){
+        reset();
+        if(questions < 10) {
+            userAnswer = "?";
+            questionAnswered = false;
+            keypadEnabled = true;
             GetQuestion();
-        timer();
+            timer.start();
+        } else {
+            questionField.setText("GAMEOVER!");
+            keypadEnabled =false;
+        }
     }
 
     public void GetQuestion(){
@@ -128,8 +150,8 @@ public class Game extends Activity implements OnClickListener{
 
     }
 
-    public void input( String key){
-        if(gameStatus) {
+    public void userInput(String key){
+        if(keypadEnabled) {
             if(userAnswer.equals("?")){
                 userAnswer = "";
                 questionField.setText(questionField.getText().subSequence(0,questionField.length()-1));
@@ -140,15 +162,14 @@ public class Game extends Activity implements OnClickListener{
     }
 
     public void checkAnswer(String userAnswer){
+        resultField.setTextColor(getResources().getColor(R.color.default_colour));
         int answer = gameQuestions.getAnswer();
         try {
             int userInput = Integer.parseInt(userAnswer);
             if (userInput == answer) {
-                resultField.setTextColor(getResources().getColor(R.color.correct_answer));
-                resultField.setText("CORRECT");
+                displayResult(true);
             } else {
                 if (hints && attempt < 3) {
-                    resultField.setTextColor(getResources().getColor(R.color.default_colour));
                     if (userInput > answer) {
                         resultField.setText("LESS");
                         attempt++;
@@ -157,21 +178,30 @@ public class Game extends Activity implements OnClickListener{
                         attempt++;
                     }
                 } else {
-                    resultField.setTextColor(getResources().getColor(R.color.incorrect_answer));
-                    resultField.setText("WRONG");
-
+                    displayResult(false);
                 }
             }
-
         }catch (Exception e){
             resultField.setText("Input Answer!");
         }
     }
 
+    private void displayResult(boolean result){
+
+        if (result){
+        resultField.setTextColor(getResources().getColor(R.color.correct_answer));
+        resultField.setText("CORRECT");
+        } else{
+            resultField.setTextColor(getResources().getColor(R.color.incorrect_answer));
+            resultField.setText("WRONG");
+        }
+        timer.cancel();
+        questionAnswered = true;
+        keypadEnabled = false;
+    }
+
     public void delete(){
-        if(gameStatus) {
-            System.out.println(questionField.length());
-            System.out.println(qLength);
+        if(keypadEnabled) {
             if (questionField.length() > qLength) {
                 questionField.setText(questionField.getText().subSequence(0,questionField.length()-1));
                 userAnswer = userAnswer.substring(0,userAnswer.length()-1);
@@ -179,21 +209,11 @@ public class Game extends Activity implements OnClickListener{
         }
     }
 
-    public void timer(){
-
-        final TextView mTextField = (TextView) this.findViewById(R.id.timerField);
-
-        new CountDownTimer(30000, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                mTextField.setText("Time remaining: " + millisUntilFinished / 1000);
-            }
-
-            public void onFinish() {
-                mTextField.setText("done!");
-            }
-        }.start();
+    private void reset(){
+        resultField.setText("");
+        timerField.setText("Time remaining: 10");
     }
-}
+
+    }
 
 

@@ -1,23 +1,21 @@
 package com.w1441879.assignment1;
 
-import android.widget.TextView;
-
 import java.util.Random;
 
 public class GameLogic {
 
     Random rng = new Random();
     private String[] operator ={"+", "-", "*", "/", "="};
-    String qEnd = " = ?";
-    int num1,num2,num3, num4, num5,num6;
-    private int difficulty = 0;
+    //String qEnd = " = ?";
+    //int num1,num2,num3, num4, num5,num6;
+    //private int difficulty = 0;
     int[] numbers;
     String[] qOperators;
 
     GameLogic(int diff){
-        difficulty = diff;
+        //int difficulty = diff;
 
-        switch(difficulty){
+        switch(diff){
             case 0:
                 numbers = new int[2];
                 break;
@@ -46,7 +44,7 @@ public class GameLogic {
         getOperator();
         //System.out.println("getNum");
         getNum();
-        System.out.println(" ");
+        //System.out.println(" ");
         for(int i = 0; i < numbers.length;i++){
             System.out.print(numbers[i] + " " + qOperators[i] + " ");
             String x = Integer.toString(numbers[i]);
@@ -66,11 +64,11 @@ public class GameLogic {
 
     private void getOperator(){
         qOperators = new String[numbers.length];
-        int x = rng.nextInt(3-0 +1) +0;
+        //int x = rng.nextInt(3 +1);
         //String op = operator[x];
 
         for(int i = 0; i < qOperators.length-1;i++){
-            qOperators[i]=operator[rng.nextInt(3-0 +1) +0];
+            qOperators[i]=operator[rng.nextInt(3 +1)];
             //qOperators[i]=operator[0];
             //System.out.println("index: "+ (i+1) + " " + qOperators[i]);
         }
@@ -88,7 +86,7 @@ public class GameLogic {
     }
 
     public int getAnswer(){
-        int questionAnswer = 0;
+        int questionAnswer;
 
         questionAnswer = Answer(numbers[0], qOperators[0], numbers[1]);
 
@@ -119,11 +117,6 @@ public class GameLogic {
 
 
         return answer;
-    }
-
-    public void checkUserAnswer(String input){
-        int ans = Integer.parseInt(input);
-
     }
 
 }
