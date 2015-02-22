@@ -15,10 +15,12 @@ public class GameLogic {
     }
 
     public String createQuestion(){
-        setQuestion();
         String Q = "";
+
+        setQuestion();
         getOperator();
         getNum();
+
         for(int i = 0; i < numbers.length;i++){
             System.out.print(numbers[i] + " " + qOperators[i] + " ");
             String x = Integer.toString(numbers[i]);
@@ -49,8 +51,11 @@ public class GameLogic {
 
     private void getOperator(){
         String[] operator ={"+", "-", "*", "/", "="};
-        qOperators = new String[numbers.length];
-
+        try {
+            qOperators = new String[numbers.length];
+        }catch(Exception e){
+            System.out.println("numbers length = " + numbers.length);
+        }
         for(int i = 0; i < qOperators.length-1;i++){
             qOperators[i]=operator[rng.nextInt(3 +1)];
         }

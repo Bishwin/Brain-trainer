@@ -3,8 +3,8 @@ package com.w1441879.assignment1;
 public class GameScore {
     private int gameScore;
 
-    GameScore() {
-        gameScore = 0;
+    GameScore(int score) {
+        gameScore = score;
     }
 
     public void setScore(int time){
@@ -16,12 +16,7 @@ public class GameScore {
             double subTotal = Math.round(100 / (double) score); //final calculation 100 divided by previous expression
             gameScore +=(int)subTotal;
 
-            System.out.println(maxTime + " - " + time + " = " + timeRemaining);
-            System.out.println(maxTime + " - " + timeRemaining + " = " + score );
-            System.out.print("100/" + (double)score + " = ");
-            System.out.println(Math.round(100/(double)score));
-            System.out.println(subTotal);
-            System.out.println(gameScore);
+            System.out.println("SCORE" + gameScore);
         }
     }
     public int getScore(){

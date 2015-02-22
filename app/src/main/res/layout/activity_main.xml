@@ -8,11 +8,19 @@
     android:padding="40dip"
     tools:context=".MainActivity">
 
+        <ImageView
+            android:id="@+id/brain"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/brain"/>
+
         <Button
             android:id="@+id/continue_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/continue_game"/>
+            android:text="@string/continue_game"
+            android:layout_below="@id/brain"/>
         <Button
             android:id="@+id/new_game_button"
             android:layout_width="fill_parent"

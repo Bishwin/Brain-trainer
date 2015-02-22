@@ -46,6 +46,9 @@ public class MainMenu extends Activity implements OnClickListener {
 
     public void onClick(View v){
         switch(v.getId()){
+            case R.id.continue_button:
+                startGame(-1);
+                break;
             case R.id.new_game_button:
                 openNewGameDialog();
                 break;

@@ -1,6 +1,8 @@
 package com.w1441879.assignment1;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -12,18 +14,20 @@ import android.widget.TextView;
 
 public class Game extends Activity implements OnClickListener{
     private static final String TAG = "BrainTrainer" ;
+    protected static final int game_continue = -1;
 
+    int gameDifficulty;
     private int time;
     private boolean keypadEnabled = false;
     private String userAnswer;
     private int attempt = 0;
     private int qLength;
     private boolean hints;
-    private int questions = 0;
+    private int questions = 1;
     private boolean questionAnswered = false;
     private String Q;
 
-    private TextView resultField, questionField, timerField;
+    private TextView resultField, questionField, timerField, questionNUM;
 
     private GameLogic gameQuestions;
     private CountDownTimer timer;
@@ -34,9 +38,31 @@ public class Game extends Activity implements OnClickListener{
         setContentView(R.layout.gameview);
         Log.d(TAG, "onCreate");
 
-        resultField=(TextView)findViewById(R.id.resultField);
-        questionField=(TextView)findViewById(R.id.questionField);
+        questionNUM=(TextView)findViewById(R.id.questNUM);
         timerField=(TextView)findViewById(R.id.timerField);
+        questionField=(TextView)findViewById(R.id.questionField);
+        resultField=(TextView)findViewById(R.id.gameInfo);
+
+        SharedPreferences sharedprefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        hints = sharedprefs.getBoolean("hints",false);
+
+        int startupgame = getIntent().getIntExtra("Difficulty", 0);
+        if (startupgame == game_continue){
+            //restore state
+            int diff= getPreferences(MODE_PRIVATE).getInt("diff_level", 0);
+            System.out.println("diff" + diff);
+            gameQuestions = new GameLogic(diff);
+            int score = getPreferences(MODE_PRIVATE).getInt("score", 0);
+            scoreboard = new GameScore(score);
+            questions =  getPreferences(MODE_PRIVATE).getInt("questions",1);
+        }else {
+            gameDifficulty = startupgame;
+            gameQuestions = new GameLogic(gameDifficulty);
+            scoreboard = new GameScore(0);
+        }
+
+        startTimer();
+
         //Buttons
         View btn1=findViewById(R.id.keypad1);
         View btn2=findViewById(R.id.keypad2);
@@ -65,27 +91,38 @@ public class Game extends Activity implements OnClickListener{
         btnDEL.setOnClickListener(this);
         btnMinus.setOnClickListener(this);
         btnHash.setOnClickListener(this);
+    }
 
-        SharedPreferences sharedprefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        hints = sharedprefs.getBoolean("hints",false);
-
-        int diff = getIntent().getIntExtra("Difficulty", 0);
-        gameQuestions = new GameLogic(diff);
-        scoreboard = new GameScore();
-
-        timer = new CountDownTimer(10000, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                timerField.setText("Time remaining: " + millisUntilFinished / 1000);
-                time++;
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Exiting Game");
+        builder.setMessage("Would you like to save your progress?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                timer.cancel();
+                int Score = scoreboard.getScore();
+                getPreferences(MODE_PRIVATE).edit().putInt("score", Score).commit();
+                getPreferences(MODE_PRIVATE).edit().putInt("diff_level",gameDifficulty).commit();
+                getPreferences(MODE_PRIVATE).edit().putInt("questions",questions).commit();
+                finish();
             }
-
-            public void onFinish() {
-                displayResult(false);
-                startTurn();
+        });
+        builder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
             }
-        };
+        });
+        AlertDialog alert=builder.create();
+        alert.show();
+    }
 
+    protected void onPause(){
+        super.onPause();
+        Log.d(TAG, "onPause");
+        timer.cancel();
     }
 
     public void onClick(View v){
@@ -137,7 +174,8 @@ public class Game extends Activity implements OnClickListener{
 
     private void startTurn(){
         reset();
-        if(questions < 10) {
+        if(questions <= 10) {
+            questionNUM.setText("Q" + questions);
             userAnswer = "?";
             questionAnswered = false;
             keypadEnabled = true;
@@ -152,13 +190,11 @@ public class Game extends Activity implements OnClickListener{
 
     private void GetQuestion(){
 
-            Q = gameQuestions.createQuestion();
-            //System.out.println("Q: " + Q);
-            questionField.setText(Q + userAnswer);
-            qLength = Q.length();
-            questions++;
-            System.out.println("question number: "+ questions);
-
+        System.out.println("question number: "+ questions);
+        Q = gameQuestions.createQuestion();
+        //System.out.println("Q: " + Q);
+        questionField.setText(Q + userAnswer);
+        qLength = Q.length();
     }
 
     private void userInput(String key){
@@ -173,7 +209,6 @@ public class Game extends Activity implements OnClickListener{
     }
 
     private void checkAnswer(String userAnswer){
-        resultField.setTextColor(getResources().getColor(R.color.default_colour));
         int answer = gameQuestions.getAnswer();
         try {
             int userInput = Integer.parseInt(userAnswer);
@@ -214,6 +249,7 @@ public class Game extends Activity implements OnClickListener{
         timer.cancel();
         questionAnswered = true;
         keypadEnabled = false;
+        questions++;
     }
 
     private void delete(){
@@ -226,15 +262,34 @@ public class Game extends Activity implements OnClickListener{
     }
 
     private void reset(){
+        resultField.setTextColor(getResources().getColor(R.color.default_colour));
         attempt =0;
         resultField.setText(" ");
         timerField.setText(" ");
+        questionNUM.setText(" ");
     }
 
     private void clear(){
         questionField.setText(Q);
         userAnswer = "";
     }
+
+    public void startTimer(){
+        timer = new CountDownTimer(10000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                timerField.setText("Time remaining: " + millisUntilFinished / 1000);
+                time++;
+            }
+
+            public void onFinish() {
+                displayResult(false);
+                startTurn();
+            }
+        };
+    }
+
+
 
 
 

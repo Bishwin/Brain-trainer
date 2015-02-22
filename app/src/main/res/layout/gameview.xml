@@ -6,25 +6,35 @@
     android:id="@+id/buttons">
 
     <TextView
-        android:id="@+id/resultField"
-        android:layout_width="match_parent"
+        android:id="@+id/questNUM"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:gravity="center_vertical"
+        android:textSize="50sp"
+        android:layout_above="@+id/questionField"
+        android:layout_toStartOf="@+id/timerField" />
+    <TextView
+        android:id="@+id/timerField"
+        android:layout_width="275dp"
         android:layout_height="80dp"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="30sp"
-        />
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/questionField" />
     <TextView
         android:id="@+id/questionField"
-        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_width="375dp"
         android:layout_height="130dp"
-        android:layout_below="@+id/resultField"
+        android:layout_below="@+id/timerField"
         android:gravity="center"
         android:textAlignment="center"
         android:textSize="30sp"
         android:background="@drawable/border"
         android:text="@string/StartMSG"/>
     <TextView
-        android:id="@+id/timerField"
+        android:id="@+id/gameInfo"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:gravity="center"
@@ -49,8 +59,7 @@
                 android:id="@+id/keypad2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/button_2"
-                />
+                android:text="@string/button_2"/>
             <Button
                 android:id="@+id/keypad3"
                 android:layout_width="wrap_content"
