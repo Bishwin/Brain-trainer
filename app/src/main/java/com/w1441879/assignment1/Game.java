@@ -1,8 +1,10 @@
 package com.w1441879.assignment1;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,7 +17,7 @@ public class Game extends Activity implements OnClickListener{
     private String userAnswer;
     int attempt = 0;
     private int qLength;
-    boolean hints = false;
+    boolean hints;
     int questions = 0;
     boolean questionAnswered = false;
 
@@ -65,7 +67,7 @@ public class Game extends Activity implements OnClickListener{
 
         gameQuestions = new GameLogic(diff);
 
-        timer = new CountDownTimer(11000, 1000) {
+        timer = new CountDownTimer(10000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 timerField.setText("Time remaining: " + millisUntilFinished / 1000);
@@ -76,6 +78,9 @@ public class Game extends Activity implements OnClickListener{
                 startTurn();
             }
         };
+
+        SharedPreferences sharedprefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        hints = sharedprefs.getBoolean("hints",false);
     }
 
     public void onClick(View v){
@@ -210,8 +215,9 @@ public class Game extends Activity implements OnClickListener{
     }
 
     private void reset(){
-        resultField.setText("");
-        timerField.setText("Time remaining: 10");
+        attempt =0;
+        resultField.setText(" ");
+        timerField.setText(" ");
     }
 
     }
