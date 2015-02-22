@@ -13,18 +13,21 @@ import android.widget.TextView;
 public class Game extends Activity implements OnClickListener{
     private static final String TAG = "BrainTrainer" ;
 
+    private int time;
     private boolean keypadEnabled = false;
     private String userAnswer;
-    int attempt = 0;
+    private int attempt = 0;
     private int qLength;
-    boolean hints;
-    int questions = 0;
-    boolean questionAnswered = false;
+    private boolean hints;
+    private int questions = 0;
+    private boolean questionAnswered = false;
+    private String Q;
 
     private TextView resultField, questionField, timerField;
 
     private GameLogic gameQuestions;
     private CountDownTimer timer;
+    GameScore scoreboard;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -63,14 +66,18 @@ public class Game extends Activity implements OnClickListener{
         btnMinus.setOnClickListener(this);
         btnHash.setOnClickListener(this);
 
-        int diff = getIntent().getIntExtra("Difficulty", 0);
+        SharedPreferences sharedprefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        hints = sharedprefs.getBoolean("hints",false);
 
+        int diff = getIntent().getIntExtra("Difficulty", 0);
         gameQuestions = new GameLogic(diff);
+        scoreboard = new GameScore();
 
         timer = new CountDownTimer(10000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 timerField.setText("Time remaining: " + millisUntilFinished / 1000);
+                time++;
             }
 
             public void onFinish() {
@@ -79,8 +86,6 @@ public class Game extends Activity implements OnClickListener{
             }
         };
 
-        SharedPreferences sharedprefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        hints = sharedprefs.getBoolean("hints",false);
     }
 
     public void onClick(View v){
@@ -130,7 +135,7 @@ public class Game extends Activity implements OnClickListener{
         }
     }
 
-    public void startTurn(){
+    private void startTurn(){
         reset();
         if(questions < 10) {
             userAnswer = "?";
@@ -141,12 +146,13 @@ public class Game extends Activity implements OnClickListener{
         } else {
             questionField.setText("GAMEOVER!");
             keypadEnabled =false;
+            resultField.setText("GAMESCORE = " + Integer.toString(scoreboard.getScore()));
         }
     }
 
-    public void GetQuestion(){
+    private void GetQuestion(){
 
-            String Q = gameQuestions.createQuestion();
+            Q = gameQuestions.createQuestion();
             //System.out.println("Q: " + Q);
             questionField.setText(Q + userAnswer);
             qLength = Q.length();
@@ -155,7 +161,7 @@ public class Game extends Activity implements OnClickListener{
 
     }
 
-    public void userInput(String key){
+    private void userInput(String key){
         if(keypadEnabled) {
             if(userAnswer.equals("?")){
                 userAnswer = "";
@@ -166,7 +172,7 @@ public class Game extends Activity implements OnClickListener{
         }
     }
 
-    public void checkAnswer(String userAnswer){
+    private void checkAnswer(String userAnswer){
         resultField.setTextColor(getResources().getColor(R.color.default_colour));
         int answer = gameQuestions.getAnswer();
         try {
@@ -178,9 +184,11 @@ public class Game extends Activity implements OnClickListener{
                     if (userInput > answer) {
                         resultField.setText("LESS");
                         attempt++;
+                        clear();
                     } else if (userInput < answer) {
                         resultField.setText("GREATER");
                         attempt++;
+                        clear();
                     }
                 } else {
                     displayResult(false);
@@ -196,16 +204,19 @@ public class Game extends Activity implements OnClickListener{
         if (result){
         resultField.setTextColor(getResources().getColor(R.color.correct_answer));
         resultField.setText("CORRECT");
+        scoreboard.setScore(time);
+            time=0;
         } else{
             resultField.setTextColor(getResources().getColor(R.color.incorrect_answer));
             resultField.setText("WRONG");
+
         }
         timer.cancel();
         questionAnswered = true;
         keypadEnabled = false;
     }
 
-    public void delete(){
+    private void delete(){
         if(keypadEnabled) {
             if (questionField.length() > qLength) {
                 questionField.setText(questionField.getText().subSequence(0,questionField.length()-1));
@@ -219,6 +230,14 @@ public class Game extends Activity implements OnClickListener{
         resultField.setText(" ");
         timerField.setText(" ");
     }
+
+    private void clear(){
+        questionField.setText(Q);
+        userAnswer = "";
+    }
+
+
+
 
     }
 

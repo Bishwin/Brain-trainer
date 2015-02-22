@@ -7,9 +7,6 @@ import android.preference.PreferenceManager;
 
 public class SettingsFragment extends PreferenceFragment {
 
-    private static final String OPT_HINTS = "hints";
-    private static final boolean OPT_HINTS_DEF = true;
-
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 

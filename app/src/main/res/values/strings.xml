@@ -10,7 +10,13 @@
     <string name="exit_game">Exit</string>
 
     <string name="about_title">Game Instructions</string>
-    <string name="about_info">About game goes here</string>
+    <string name="about_info">
+      This maths game randomly generates equations based on a preselected difficulty level.\n\n
+      The objective is to answer each question before the time runs out.\n\n
+      To play, select your desired difficulty and press the # key to start the game.\n\n
+      Use the onscreen keypad to answer each question and use the # key to submit your answer.\n\n
+      Pressing the # key again will progress onto the next question.\n\n
+      Hints can be enabled from the settings menu.</string>
 
     <string name="setting_title">Settings</string>
     <string name="hint_title">Hints</string>
