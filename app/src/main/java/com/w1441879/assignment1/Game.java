@@ -18,19 +18,17 @@ public class Game extends Activity implements OnClickListener{
 
     int gameDifficulty;
     private int time;
-    private boolean keypadEnabled = false;
+    private boolean gameResponsive = false;
     private String userAnswer;
     private int attempt = 0;
-    private int qLength;
-    private boolean hints;
     private int questions = 1;
-    private boolean questionAnswered = false;
-    private String Q;
 
     private TextView resultField, questionField, timerField, questionNUM;
 
     private GameLogic gameQuestions;
     private CountDownTimer timer;
+    private
+    SharedPreferences sharedprefs;
     GameScore scoreboard;
 
     protected void onCreate(Bundle savedInstanceState){
@@ -43,19 +41,22 @@ public class Game extends Activity implements OnClickListener{
         questionField=(TextView)findViewById(R.id.questionField);
         resultField=(TextView)findViewById(R.id.gameInfo);
 
-        SharedPreferences sharedprefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        hints = sharedprefs.getBoolean("hints",false);
+        //enables hints from settings menu
+        sharedprefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         int startupgame = getIntent().getIntExtra("Difficulty", 0);
+        //if the extra data passed is -1 restore previous game
         if (startupgame == game_continue){
             //restore state
             int diff= getPreferences(MODE_PRIVATE).getInt("diff_level", 0);
             System.out.println("diff" + diff);
             gameQuestions = new GameLogic(diff);
+            gameDifficulty = diff;
             int score = getPreferences(MODE_PRIVATE).getInt("score", 0);
             scoreboard = new GameScore(score);
             questions =  getPreferences(MODE_PRIVATE).getInt("questions",1);
         }else {
+            //starts new game
             gameDifficulty = startupgame;
             gameQuestions = new GameLogic(gameDifficulty);
             scoreboard = new GameScore(0);
@@ -95,28 +96,31 @@ public class Game extends Activity implements OnClickListener{
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Exiting Game");
-        builder.setMessage("Would you like to save your progress?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                timer.cancel();
-                int Score = scoreboard.getScore();
-                getPreferences(MODE_PRIVATE).edit().putInt("score", Score).commit();
-                getPreferences(MODE_PRIVATE).edit().putInt("diff_level",gameDifficulty).commit();
-                getPreferences(MODE_PRIVATE).edit().putInt("questions",questions).commit();
-                finish();
-            }
-        });
-        builder.setNegativeButton("No",new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-        AlertDialog alert=builder.create();
-        alert.show();
+        //confirmation for closing current game
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Exiting Game");
+            builder.setMessage("Would you like to save your progress?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //closes game and saves state
+                    timer.cancel();
+                    int Score = scoreboard.getScore();
+                    getPreferences(MODE_PRIVATE).edit().putInt("score", Score).commit();
+                    getPreferences(MODE_PRIVATE).edit().putInt("diff_level", gameDifficulty).commit();
+                    getPreferences(MODE_PRIVATE).edit().putInt("questions", questions).commit();
+                    finish();
+                }
+            });
+            //closes game without saving
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
     }
 
     protected void onPause(){
@@ -164,41 +168,35 @@ public class Game extends Activity implements OnClickListener{
                 userInput("-");
                 break;
             case R.id.keypadHash:
-                if(!keypadEnabled)startTurn();
-                else if(questionAnswered){
-                    startTurn();
-                }else checkAnswer(userAnswer);
+                if(gameResponsive)checkAnswer(userAnswer);
+                else startTurn();
                 break;
         }
     }
 
     private void startTurn(){
-        reset();
+        reset();//resets textfields
         if(questions <= 10) {
-            questionNUM.setText("Q" + questions);
+            gameResponsive = true;
+            questionNUM.setText("Q" + questions); //sets Q#
             userAnswer = "?";
-            questionAnswered = false;
-            keypadEnabled = true;
             GetQuestion();
             timer.start();
         } else {
             questionField.setText("GAMEOVER!");
-            keypadEnabled =false;
+            gameResponsive =false;
             resultField.setText("GAMESCORE = " + Integer.toString(scoreboard.getScore()));
         }
     }
 
     private void GetQuestion(){
-
         System.out.println("question number: "+ questions);
-        Q = gameQuestions.createQuestion();
-        //System.out.println("Q: " + Q);
-        questionField.setText(Q + userAnswer);
-        qLength = Q.length();
+        String Question = gameQuestions.createQuestion();
+        questionField.setText(Question + userAnswer);
     }
 
     private void userInput(String key){
-        if(keypadEnabled) {
+        if(gameResponsive) {
             if(userAnswer.equals("?")){
                 userAnswer = "";
                 questionField.setText(questionField.getText().subSequence(0,questionField.length()-1));
@@ -209,24 +207,25 @@ public class Game extends Activity implements OnClickListener{
     }
 
     private void checkAnswer(String userAnswer){
+        boolean hints = sharedprefs.getBoolean("hints",false);//detects if hints are enabled
         int answer = gameQuestions.getAnswer();
         try {
-            int userInput = Integer.parseInt(userAnswer);
+            int userInput = Integer.parseInt(userAnswer);//changes user to int
             if (userInput == answer) {
-                displayResult(true);
+                displayResult(true); //correct answer
             } else {
-                if (hints && attempt < 3) {
+                if (hints && attempt < 3) { //hints to user
                     if (userInput > answer) {
                         resultField.setText("LESS");
                         attempt++;
-                        clear();
+                        clearUserInput(userAnswer.length());
                     } else if (userInput < answer) {
                         resultField.setText("GREATER");
                         attempt++;
-                        clear();
+                        clearUserInput(userAnswer.length());
                     }
                 } else {
-                    displayResult(false);
+                    displayResult(false); //incorrect answer
                 }
             }
         }catch (Exception e){
@@ -247,14 +246,13 @@ public class Game extends Activity implements OnClickListener{
 
         }
         timer.cancel();
-        questionAnswered = true;
-        keypadEnabled = false;
+        gameResponsive = false;
         questions++;
     }
 
     private void delete(){
-        if(keypadEnabled) {
-            if (questionField.length() > qLength) {
+        if(gameResponsive) {
+            if (questionField.length() > gameQuestions.getQuestionLength()) {
                 questionField.setText(questionField.getText().subSequence(0,questionField.length()-1));
                 userAnswer = userAnswer.substring(0,userAnswer.length()-1);
             }
@@ -269,9 +267,9 @@ public class Game extends Activity implements OnClickListener{
         questionNUM.setText(" ");
     }
 
-    private void clear(){
-        questionField.setText(Q);
-        userAnswer = "";
+    private void clearUserInput(int i){
+        for(int x=0; x < i; x++)
+            delete();
     }
 
     public void startTimer(){

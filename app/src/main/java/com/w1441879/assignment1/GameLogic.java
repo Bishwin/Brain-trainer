@@ -5,7 +5,7 @@ import java.util.Random;
 public class GameLogic {
 
     Random rng = new Random();
-
+    private int questionLength;
     private int difficulty = 0;
     private int[] numbers;
     private String[] qOperators;
@@ -17,16 +17,17 @@ public class GameLogic {
     public String createQuestion(){
         String Q = "";
 
-        setQuestion();
-        getOperator();
-        getNum();
+        setQuestion(); //gets number of ints per question
+        getOperator(); //RNG operators
+        getNum();      //RNG numbers
 
         for(int i = 0; i < numbers.length;i++){
-            System.out.print(numbers[i] + " " + qOperators[i] + " ");
+            //System.out.print(numbers[i] + " " + qOperators[i] + " ");
             String x = Integer.toString(numbers[i]);
-            Q = Q.concat(x).concat(qOperators[i]);
+            Q = Q.concat(x).concat(qOperators[i]);//creates string of question
         }
-        return Q;
+        questionLength = Q.length(); //saves question length for deleting in game screen
+        return Q; //returns question string for printing to screen
     }
 
     private void setQuestion(){
@@ -47,19 +48,16 @@ public class GameLogic {
                 numbers = new int[num3];
                 break;
         }
+        qOperators = new String[numbers.length];
     }
 
     private void getOperator(){
         String[] operator ={"+", "-", "*", "/", "="};
-        try {
-            qOperators = new String[numbers.length];
-        }catch(Exception e){
-            System.out.println("numbers length = " + numbers.length);
-        }
-        for(int i = 0; i < qOperators.length-1;i++){
+
+        for(int i = 0; i < qOperators.length-1;i++){  //fills array with operators
             qOperators[i]=operator[rng.nextInt(3 +1)];
         }
-        qOperators[qOperators.length-1] = "=";
+        qOperators[qOperators.length-1] = "="; //adds last index with "="
     }
 
     private void getNum(){
@@ -68,11 +66,11 @@ public class GameLogic {
         }
     }
 
-    public int getAnswer(){
+    public int getAnswer(){  //from left to right takes two nums and calculates answer
         int questionAnswer;
-        questionAnswer = Answer(numbers[0], qOperators[0], numbers[1]);
+        questionAnswer = Answer(numbers[0], qOperators[0], numbers[1]); //always takes first 2
         for(int i = 2; i < numbers.length; i++){
-            questionAnswer = Answer(questionAnswer, qOperators[i-1], numbers[i]);
+            questionAnswer = Answer(questionAnswer, qOperators[i-1], numbers[i]); //then the subtotal with each on to the right for grand total
         }
         return questionAnswer;
     }
@@ -91,12 +89,16 @@ public class GameLogic {
                 answer = num1 * num2;
                 return answer;
             case "/":
-                double divide = (double)num1 / (double)num2;
+                double divide = (double)num1 / (double)num2; //rounds division to whole number
                 float divideAnswer = Math.round(divide);
                 return (int)divideAnswer;
             case "=":
         }
         return answer;
+    }
+
+    public int getQuestionLength(){
+        return questionLength; // question length for deleting
     }
 }
 

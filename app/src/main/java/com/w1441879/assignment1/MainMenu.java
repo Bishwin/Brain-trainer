@@ -22,15 +22,6 @@ public class MainMenu extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActionBar actionBar = getActionBar();
-
-        /*try{
-            actionBar.setTitle("hello");
-        }
-        catch(Exception e){
-            System.out.println("whoops");
-        }*/
-
         //Buttons
         continueButton=findViewById(R.id.continue_button);
         newButton = findViewById(R.id.new_game_button);
@@ -88,7 +79,6 @@ public class MainMenu extends Activity implements OnClickListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
@@ -97,9 +87,6 @@ public class MainMenu extends Activity implements OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
 
         switch(item.getItemId()){
             case R.id.settings:
@@ -107,14 +94,5 @@ public class MainMenu extends Activity implements OnClickListener {
                 return true;
         }
         return false;
-        /*int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);*/
-
     }
 }
