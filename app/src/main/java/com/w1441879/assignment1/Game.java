@@ -190,7 +190,6 @@ public class Game extends Activity implements OnClickListener{
     }
 
     private void GetQuestion(){
-        System.out.println("question number: "+ questions);
         String Question = gameQuestions.createQuestion();
         questionField.setText(Question + userAnswer);
     }

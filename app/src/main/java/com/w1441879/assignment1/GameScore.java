@@ -15,7 +15,7 @@ public class GameScore {
             int score = maxTime - timeRemaining; //calculates first part of formula 10-time remaining
             double subTotal = Math.round(100 / (double) score); //final calculation 100 divided by previous expression
             gameScore +=(int)subTotal;
-
+            System.out.println("subtotal" + subTotal);
             System.out.println("SCORE" + gameScore);
         }
     }
